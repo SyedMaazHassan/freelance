@@ -1,0 +1,96 @@
+{% include 'inc/head.inc.html' %}
+
+{% include 'inc/navbar.inc.html' %}
+
+<body style="background-color: #ffffff;">
+    <div class="row" style="width: 100%;">
+        <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 90vh">
+            <div class="my-form p-5" id="mainDiv" style="width: 60%;">
+                <h3 class="text-primary">Register to hire freelancer</h3>
+
+                <form autocomplete="off" style="text-align:center; margin-top: 30px;" action="createClient" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        
+                        <input class="field form-control" id="fullName" name="fullName" type="text" value="{{fullName}}" placeholder="Full name" required>
+                        <input class="field form-control" id="city" name="city" type="text" value="{{city}}" placeholder="City" required>
+                        <input class="field form-control my-0" id="postcode" name="postcode" type="text" value="{{postcode}}" placeholder="Postcode" required>
+
+
+                        <input class="field form-control" id="pass1" name="pass1" type="password" value="{{pass1}}" placeholder="Password" required>
+                        
+
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <input class="field form-control" id="email" name="email" type="email" value="{{email}}" placeholder="Email" required>
+                        <input class="field form-control" id="homeAddress" name="homeAddress" type="text" value="{{homeAddress}}" placeholder="Home Address" required>
+                        <input class="field form-control" id="kvkNumber" name="kvkNumber" type="text" value="{{kvkNumber}}" placeholder="KVK number" required>
+                        <input class="field form-control" id="pass2" name="pass2" type="password" value="{{pass2}}" placeholder="Confirm Password" required>
+
+                    </div>
+                </div>
+
+                <p  id="error" 
+                    style="
+                        text-align: left; 
+                        transition-duration:0.25s;
+                        color:#ed4337;"
+                >
+                    
+                </p>
+
+                <div class="row">
+                    <div class="col-sm-2">
+
+                    </div>
+
+                    <div class="col-sm-8 d-flex justify-content-center">
+                        <a href="{% url 'login' %}"><button style="width: 200px; height: 50px;" class="btn btn-block btn-secondary mx-2" type="button">LOGIN</button></a>
+                        <button class="btn btn-block btn-primary mx-2" style="width: 200px; height: 50px;" type="submit">CONFIRM</button>        
+
+                    </div>
+
+                    <div class="col-sm-2">
+
+                    </div>
+                </div>
+
+
+                </form>
+       
+            </div>
+        </div>
+    </div>    
+</body>
+
+<script>
+    var x = "{{border}}";
+
+    if(x=="email"){
+        $("#email").css(
+            'border-color', '#ed4337'
+        );
+        $("#error").text("Entered email has already been registered!");
+
+    }else if(x=="password"){
+        $("#pass1, #pass2").css(
+            'border-color', '#ed4337'
+        );
+
+        $("#error").text("Your password don't match!");
+
+    }else if(x=="kvkNumber"){
+        $("#kvkNumber").css(
+            'border-color', '#ed4337'
+        );
+
+        $("#error").text("Entered kvk number has already been registered!");
+    };
+
+</script>
+
+</html>
