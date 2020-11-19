@@ -1,35 +1,55 @@
-<div class="bg-primary" style="height: 70px;">
-    <div class="container pt-3">
-        <i class="material-icons mb-3 float-left text-primary bg-white mr-3" style="border-radius: 100%; padding:5px; font-size:30px; cursor: pointer;" title="Go back" onclick="window.history.back()">keyboard_arrow_left</i>
-        {% if user.is_authenticated %}        
-        <div class="float-left mt-1 text-white">
-            <h4>Hi {{user.first_name}}</h4>
-        </div>
-        {% endif %}
-        <div class="float-right">
-            {% if user.is_authenticated %}
-            <a href="logout">
-                <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Logout</button>
 
-            </a>
 
-            {% else %}
-            <a href="login">
-                <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Login</button>
-
-            </a>
-
-            <a href="register/freelancer">
-                <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Freelancer</button>
-            </a>
-
-            <a href="register/client">
-                <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Client</button>
-            </a>
+<div class="bg-primary">
+    <div class="container">
+        <nav class="navbar navbar-expand-md bg-primary navbar-dark">
+            <i class="material-icons float-left text-primary bg-white mr-3" style="border-radius: 100%; padding:5px; font-size:30px; cursor: pointer;" title="Go back" onclick="window.history.back()">keyboard_arrow_left</i>
+            {% if user.is_authenticated %}        
+            <div class="float-left mt-1 text-white">
+                <h4>Hi {{user.first_name}}</h4>
+            </div>
             {% endif %}
     
-        </div>
-
-    </div>        
-
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse flex-row-reverse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    
+                      <li class="nav-item">
+                        <a class="nav-link" href="logout">
+                            <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Logout</button>
+                        </a>
+                     </li>
+    
+                    {% else %}
+    
+                      <li class="nav-item">
+                          <a class="nav-link" href="login">
+                            <button type="button" style="border: solid 1px white; width: 100%;" class="mx-2 btn btn-primary">Login</button>
+                          </a>
+                      </li>
+    
+                      <li class="nav-item">
+                        <a class="nav-link" href="register/freelancer">
+                            <button type="button" style="border: solid 1px white; width: 100%;" class="mx-2 btn btn-primary">Freelancer</button>
+                        </a>                  
+                     </li>
+                     
+                     
+                     <li class="nav-item">
+                        <a class="nav-link" href="register/client">
+                            <button type="button" style="border: solid 1px white; width: 100%;" class="mx-2 btn btn-primary">Client</button>
+                        </a>
+                     </li>
+    
+                    {% endif %}
+               
+                  
+                </ul>
+              </div>  
+            
+        </nav>
+    </div>
 </div>

@@ -19,8 +19,28 @@ def register(request, type):
         return redirect("index")
 
     if type == "freelancer":
-        return render(request, "signup.html")
+        LIST = [
+            "Verpleegkunde MBO",
+            "Verpleegkunde MBO 4",
+            "Verzorgende IG",
+            "Verzorgende AG",
+            "Helpende Plus",
+            "Helpende Plus",
+            "Thuisbegeleider",
+            "Social Work",
+            "Social Pedagogische Werk",
+            "Social Pedagogische Hulpverlening",
+            "Pedagogisch medewerker kinderopvang",
+            "Agogisch Medewerker",
+            "Maatschappelijke Zorg",
+            "Maatschappelijk Werk en Dienstverlening",
+            "Persoonlijk begeleider specifieke doelgroepen",
+            "Persoonlijk begeleider gehandicaptenzorg",
+            "Other"
+        ]
+        return render(request, "signup.html", {'specialities': LIST})
     elif type == "client":
+     
         return render(request, "client.html")
     else:
         return redirect("login")      

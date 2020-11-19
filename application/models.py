@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class client(models.Model):
+    # additional fields
     fullName    = models.CharField(max_length = 25)
     city        = models.CharField(max_length = 25)
     postcode    = models.CharField(max_length = 25)
