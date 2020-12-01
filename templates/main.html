@@ -7,23 +7,37 @@
 
     <div class="container">
 
-        <div class="row my-4">
+        
+        {% if not all_jobs %}
+            {% if user.ifClient %}
+        
+                <div class="alert alert-success text-center" style="width: 100%;" role="alert">
+                    You haven't posted any job yet. <b><u><a style="cursor: pointer;" data-toggle="modal" data-target="#add-job">Post the job</a></u></b> and hire talented workers.</h3>
+                </div>
 
-            {% if not all_jobs %}
-                {% if user.ifClient %}
-               
-                    <div class="alert alert-success text-center" style="width: 100%;" role="alert">
-                        You haven't posted any job yet. <b><u><a style="cursor: pointer;" data-toggle="modal" data-target="#add-job">Post the job</a></u></b> and hire talented workers.</h3>
-                    </div>
+            {% else %}
 
-                {% else %}
+                <div class="alert alert-success text-center" style="width: 100%;" role="alert">
+                    No job available right now. But don't worry, keep in touch with us. All jobs will be visible here.                    </div>
+                </div>
 
-                    <div class="alert alert-success text-center" style="width: 100%;" role="alert">
-                        No job available right now. But don't worry, keep in touch with us. All jobs will be visible here.                    </div>
-                    </div>
-
-                {% endif %}
             {% endif %}
+        {% else %}
+
+            <h3 class="mt-4 text-secondary">
+                
+                    All jobs create 
+                    {% if user.ifClient %}
+                        by 
+                    {% else %}  
+                        for
+                    {% endif %}
+                    you
+            </h3>
+
+        {% endif %}
+
+        <div class="row my-2">
 
             {% for job in all_jobs %}
 
