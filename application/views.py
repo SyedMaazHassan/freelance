@@ -3,15 +3,70 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
+from datetime import datetime
+from datetime import time as dtime
 from django.http import JsonResponse
 import json
 
+# this fuction takes form fields, validate them and save in job model
+def createJob(request):
+    if request.method == "POST":
+        title           = request.POST['jobTitle']
+        description     = request.POST['jobDescription']
+        location        = request.POST['location']
+        total_days      = request.POST['totalDays']
+        hours_per_day   = request.POST['hoursPerDay']
+        start_time      = request.POST['startTime']
+        task_types      = request.POST['taskListInput']
+        group_types     = request.POST['groupListInput']
+
+        print(title)
+        print(description)
+        print(location)
+        print(total_days)
+        print(hours_per_day)
+        print(type(start_time))
+        print(task_types)
+        print(group_types)
+
+        new_job = job(
+            title = title,
+            description = description,
+            location = location,
+            total_days = int(total_days),
+            hours_per_day = int(hours_per_day),
+            start_time = start_time,
+            task_types = task_types,
+            group_types = group_types,
+            posted_by = request.user
+        )
+
+        new_job.save()
+
+
+    return redirect("index")
 # main page function
 
 def index(request):
+    context = {
+        "all_jobs": None
+    }
+
     if not request.user.is_authenticated:
         return redirect("login")
-    return render(request, 'main.html')
+
+    if request.user.ifClient:
+        if job.objects.filter(posted_by = request.user).exists():
+            context["all_jobs"] = job.objects.filter(posted_by = request.user)
+
+    if request.user.ifFreelancer:
+        if job.objects.filter(status = "Open").exists():
+            context["all_jobs"] = job.objects.filter(status = "Open")
+
+           
+
+
+    return render(request, 'main.html', context)
 
 # function for signup
 def register(request, type):

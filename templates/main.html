@@ -4,6 +4,100 @@
 {% include 'inc/navbar.inc.html' %}
 
 <body>
-  
+
+    <div class="container">
+
+        <div class="row my-4">
+
+            {% if not all_jobs %}
+                {% if user.ifClient %}
+               
+                    <div class="alert alert-success text-center" style="width: 100%;" role="alert">
+                        You haven't posted any job yet. <b><u><a style="cursor: pointer;" data-toggle="modal" data-target="#add-job">Post the job</a></u></b> and hire talented workers.</h3>
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success text-center" style="width: 100%;" role="alert">
+                        No job available right now. But don't worry, keep in touch with us. All jobs will be visible here.                    </div>
+                    </div>
+
+                {% endif %}
+            {% endif %}
+
+            {% for job in all_jobs %}
+
+            <div class="col-sm-6 my-3">
+
+                <div class="card job-card p-2" style="width: 100%; height: 100%;">
+                    <div class="card-body d-flex flex-column">
+                        <div>
+                            <h4 style="display: inline-block;" class="card-title">{{ job.title }}</h4>
+                            <h5 style="float: right;">
+                                <span class="badge badge-secondary">Total {{ job.get_total_hours }} hours</span>
+                            </h5>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted <span class="text-primary"><b>{{job.when_posted}}</b></span></h6>
+                        <p class="card-text pb-0 mb-2 mt-3 text-secondary">{{ job.description }}</p>
+                    
+                        <div class="row my-0">
+                            <div class="col-sm-6 my-2">
+                                <div class="portion">
+                                    <h6 class="my-2 text-primary">Location</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ job.location }}</h6>    
+                                </div>
+
+                                <div class="portion">
+                                    <h6 class="my-2 text-primary">Job Status</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ job.status }}</h6>      
+                                </div>
+
+                                <div class="portion">
+                                    <h6 class="my-2 text-primary">Job posted by</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ job.posted_by.first_name }}</h6>    
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-sm-6 my-2">
+                                <div class="px-3 py-2 border" style="border-radius: 5px;">
+                                    <table class="m-0 table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td><b>Days</b></td>
+                                                <td class="text-right">{{job.total_days}}</td>
+                                            </tr>
+    
+                                            <tr>
+                                                <td><b>Hours / day</b></td>
+                                                <td class="text-right">{{job.hours_per_day}}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><b>Timing</b></td>
+                                                <td class="text-right">{{job.start_time}}</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        {% if user.ifFreelancer %}
+                            <button type="button" class="btn btn-primary mt-auto btn-block">Submit your proposal</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            
+        </div>
+
+    </div>
+
+
 </body>
 </html>

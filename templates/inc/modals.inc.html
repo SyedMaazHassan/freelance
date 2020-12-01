@@ -1,0 +1,202 @@
+<div class="modal fade" id="add-job" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalTitle">Add job details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="jobForm" method="POST" action="createJob">
+                {% csrf_token %} 
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="jobTitle">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitle" name="jobTitle" aria-describedby="titlehelp" required>
+                            <small id="titlehelp" class="form-text text-muted">e.g. I'm looking for a plumber to fix my home's pipe lines</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobDescription">Job Description</label>
+                            <textarea type="text" class="form-control" id="jobDescription" name="jobDescription" aria-describedby="deschelp" required></textarea>
+                            <small id="deschelp" class="form-text text-muted">Explain your job to the worker</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" class="form-control" name="location" id="location" aria-describedby="locationhelp" required>
+                            <small id="locationhelp" class="form-text text-muted">Complete work location with complete address</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="totalDays">Total days</label>
+                                    <input type="number" min="1" class="form-control" name="totalDays" id="totalDays" required>
+                                    <small class="form-text text-muted">No. of days for the job</small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="hoursPerDay">Hours / day</label>
+                                    <input type="number" min="1" class="form-control" name="hoursPerDay" id="hoursPerDay" required>
+                                    <small class="form-text text-muted">No. of working hours</small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="totalDays">Start time</label>
+                                    <input type="time" class="form-control" id="startTime" name="startTime" aria-describedby="startTimeHelp" required>
+                                    <small id="startTimeHelp" class="form-text text-muted">For each day</small>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="location">Task types</label>
+                            <div id="task-container">
+                            </div>
+                            <p class="text-danger" id="task_error"></p>
+                        </div>
+
+                        <input type="hidden" name="taskListInput" id="taskListInput">
+                        <input type="hidden" name="groupListInput" id="groupListInput">
+
+                        <div class="form-group">
+                            <label for="location">Groups</label>
+                            <div id="group-container">
+                            </div>
+                            <p class="text-danger mb-0" id="group_error"></p>
+                        </div>
+
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-block">Post this job</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var task_types = [
+        "verzorging",
+        "adl task",
+        "verpleging",
+        "begeleiding",
+        "backup"
+    ]
+
+    var groups = [
+        "kinderen", 
+        "jongeren",
+        "volwassenen", 
+        "ouderen", 
+        "combinatie", 
+        "autisme", 
+        "lvb", 
+        "mvb", 
+        "schizofrenie", 
+        "lichamelijke", 
+        "beperking", 
+        "mobiliteitsprobleem", 
+        "asielzoekers", 
+        "verslaafden", 
+        "daklozen", 
+        "psychiatrie"
+    ]
+
+    for (let task = 0; task < task_types.length; task++) {
+        const element = task_types[task];
+        $("#task-container").append(`
+        
+            <span class="mylabel to-select-label" id="task_${element}">${element}</span>
+        
+        `);
+    }
+
+    for (let group = 0; group < groups.length; group++) {
+        const element = groups[group];
+        $("#group-container").append(`
+        
+            <span class="mylabel to-select-label" id="group_${element}">${element}</span>
+        
+        `);  
+    }
+
+    var selected_groups = [];
+    var selected_tasks = [];
+
+    $(".mylabel").on('click', function(){
+        let collection = this.id.split("_");
+        let type = collection[0];
+        let element = collection[1];
+        let target_list = [];
+
+        if (type == "task") {
+            target_list = selected_tasks;
+        }else{
+            target_list = selected_groups;
+        }
+
+        if (target_list.includes(element)) {
+            // already selected
+            target_list.splice(target_list.indexOf(element), 1);
+            $(this).addClass("to-select-label");
+            $(this).removeClass("selected-label");
+            
+        }else{
+            // already unselected
+            target_list.push(element);
+            $(this).addClass("selected-label");
+            $(this).removeClass("to-select-label");
+    
+        }
+
+        if (type == "task") {
+            selected_tasks = target_list;
+        }else{
+            selected_groups = target_list;
+        }
+        
+        // console.log("selected_tasks");
+        // console.log(selected_tasks);
+        // console.log("selected_groups");
+        // console.log(selected_groups);
+    });
+
+
+    $("#jobForm").on('submit', function(){
+        console.log(selected_groups);
+        console.log(selected_tasks);
+
+        if (selected_tasks.length == 0) {
+            $("#task_error").text("Please select at least 1 task type!");
+            return false;
+        }else{
+            $("#task_error").text("");
+        }
+
+        if (selected_groups.length == 0) {
+            $("#group_error").text("Please select at least 1 group!");
+            return false;
+        }else{
+            $("#group_error").text("");
+        }
+
+        $("#taskListInput").val(selected_tasks.join(","));
+        $("#groupListInput").val(selected_groups.join(","));
+
+        return true;
+    
+
+    });
+
+
+</script>

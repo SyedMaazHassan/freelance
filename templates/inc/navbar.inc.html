@@ -1,4 +1,4 @@
-
+{% include './modals.inc.html' %}
 
 <div class="bg-primary">
     <div class="container">
@@ -16,10 +16,20 @@
               <div class="collapse navbar-collapse flex-row-reverse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+
+                      {% if user.ifClient %}
+
+                      <li class="nav-item">
+                        <a class="nav-link">
+                            <button type="button" data-toggle="modal" data-target="#add-job" style="border: solid 1px white; width: 100%;" class="mx-2 btn btn-primary">Post the job</button>
+                        </a>
+                      </li>
+
+                      {% endif %}
                     
                       <li class="nav-item">
                         <a class="nav-link" href="logout">
-                            <button type="button" style="border: solid 1px white; width: 100px;" class="mx-2 btn btn-primary">Logout</button>
+                            <button type="button" style="border: solid 1px white; width: 100%;" class="mx-2 btn btn-primary">Logout</button>
                         </a>
                      </li>
     
