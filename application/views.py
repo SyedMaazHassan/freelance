@@ -16,9 +16,13 @@ def createJob(request):
         location        = request.POST['location']
         total_days      = request.POST['totalDays']
         hours_per_day   = request.POST['hoursPerDay']
+        start_date      = request.POST['startDate']
         start_time      = request.POST['startTime']
         task_types      = request.POST['taskListInput']
         group_types     = request.POST['groupListInput']
+        note            = ""
+        if 'specialNote' in request.POST and request.POST['specialNote'] != "":
+            note = request.POST['specialNote']
 
         print(title)
         print(description)
@@ -35,9 +39,11 @@ def createJob(request):
             location = location,
             total_days = int(total_days),
             hours_per_day = int(hours_per_day),
+            start_date = start_date,
             start_time = start_time,
             task_types = task_types,
             group_types = group_types,
+            note = note,
             posted_by = request.user
         )
 
@@ -45,27 +51,48 @@ def createJob(request):
 
 
     return redirect("index")
+
+def get_filtered_jobs(request, status):
+    if status == "all":
+        all_jobs = job.objects.all()
+    else:
+        all_jobs = job.objects.filter(status = status)
+
+    if all_jobs.exists():
+        if request.user.ifClient:
+            all_jobs = all_jobs.filter(posted_by = request.user)
+
+            print(len(all_jobs))
+    return all_jobs
+
 # main page function
 
 def index(request):
-    context = {
-        "all_jobs": None
-    }
 
     if not request.user.is_authenticated:
         return redirect("login")
 
-    if request.user.ifClient:
-        if job.objects.filter(posted_by = request.user).exists():
-            context["all_jobs"] = job.objects.filter(posted_by = request.user)
+    # if request.user.ifClient:
+    #     if job.objects.filter(posted_by = request.user).exists():
+    #         context["all_jobs"] = job.objects.filter(posted_by = request.user)
 
-    if request.user.ifFreelancer:
-        if job.objects.filter(status = "Open").exists():
-            context["all_jobs"] = job.objects.filter(status = "Open")
+    # if request.user.ifFreelancer:
+    #     if job.objects.filter(status = "Open").exists():
+    #         context["all_jobs"] = job.objects.filter(status = "Open")
+        
+    return redirect("jobs")
+    
+    # return render(request, 'main.html')
 
-           
+# show jobs panel
+def jobs(request):
+    context = {}
+    status = "all"
 
-
+    if 'status' in request.GET and request.GET['status'] != "":
+        status = request.GET['status']
+   
+    context['all_jobs'] = get_filtered_jobs(request, status)
     return render(request, 'main.html', context)
 
 # function for signup
@@ -134,14 +161,18 @@ def logout(request):
 def createClient(request):
     if request.method == "POST":
         information = {
-            "fullName":     request.POST.get("fullName"),
-            "city":         request.POST.get("city"),
-            "postcode":     request.POST.get("postcode"),
-            "pass1":        request.POST.get("pass1"),
-            "email":        request.POST.get("email"),
-            "homeAddress":  request.POST.get("homeAddress"),
-            "kvkNumber":    request.POST.get("kvkNumber"),
-            "pass2":        request.POST.get("pass2"),
+            "organizationName":     request.POST.get("organizationName"),
+            "kvkNumber":            request.POST.get("kvkNumber"),
+            "email":                request.POST.get("email"),
+            "phone":                request.POST.get("phone"),
+            "firstName":            request.POST.get("firstName"),
+            "lastName":             request.POST.get("lastName"),
+            "homeAddress":          request.POST.get("homeAddress"),
+            "addressNumber":        request.POST.get("addressNumber"),
+            "postcode":             request.POST.get("postcode"),
+            "city":                 request.POST.get("city"),
+            "pass1":                request.POST.get("pass1"),
+            "pass2":                request.POST.get("pass2")
         }
 
         if information['pass1'] != information['pass2']:
@@ -154,22 +185,26 @@ def createClient(request):
             information["border"] = "email"
             return render(request, "client.html", information)
 
-        if filteration.filter(kvkNumber = information["kvkNumber"]).exists():
-            information["border"] = "kvkNumber"
-            return render(request, "client.html", information)
-
+        # if filteration.filter(kvkNumber = information["kvkNumber"]).exists():
+        #     information["border"] = "kvkNumber"
+        #     return render(request, "client.html", information)
 
         newClient = client(
-            fullName    = information["fullName"],
-            city        = information["city"],
-            postcode    = information["postcode"],
-            email       = information["email"],
-            homeAddress = information["homeAddress"],
-            kvkNumber   = information["kvkNumber"]
+            organization_name   = information["organizationName"],
+            kvkNumber           = information["kvkNumber"],
+            email               = information["email"],
+            phone               = information["phone"],
+            firstName           = information["firstName"],
+            lastName            = information["lastName"],
+            homeAddress         = information["homeAddress"],
+            addressNumber       = information["addressNumber"],
+            postcode            = information["postcode"],
+            city                = information["city"]
         )
+        
         newClient.save()
 
-        newUser = User.objects.create_user(username=information["email"], first_name=information["fullName"], password=information["pass1"], ifClient=newClient)
+        newUser = User.objects.create_user(username=information["email"], first_name=information["firstName"], password=information["pass1"], ifClient=newClient)
         newUser.save()
 
         for i, j in information.items():

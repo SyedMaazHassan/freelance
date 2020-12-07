@@ -18,24 +18,27 @@ class job(models.Model):
     location        = models.CharField(max_length = 255)
     total_days      = models.IntegerField()
     hours_per_day   = models.IntegerField()
+    start_date      = models.DateField(default = None, blank = True, null = True)
     start_time      = models.TimeField()
     end_time        = models.TimeField()
     task_types      = models.TextField()
     group_types     = models.TextField()
+    note            = models.TextField(default = None, blank = True, null = True)
     posted_date     = models.DateTimeField(default = datetime.now())
     posted_by       = models.ForeignKey(User, on_delete = models.CASCADE, null = True, blank = True)
-    status          = models.CharField(max_length = 50, default = "Open")
+    status          = models.CharField(max_length = 50, default = "open")
 
     def get_total_hours(self):
         return self.total_days * self.hours_per_day
 
     def when_posted(self):
-        naive = self.posted_date.replace(tzinfo=None)
-        myDf = datetime.now() - naive
-        days, hours, minutes = myDf.days, myDf.seconds // 3600, myDf.seconds % 3600 / 60.0
-        days, hours, minutes = int(days), int(hours), int(minutes)
-        print(days, hours, minutes)
-        print("days", "hours", "minutes")
+        postedDate = str(self.posted_date).split("+")[0]
+        postedDate = datetime.strptime(postedDate, "%Y-%m-%d %H:%M:%S.%f")
+        myDf = datetime.now() - postedDate
+        days =  int(myDf.days)
+        hours = int(myDf.seconds // 3600)
+        minutes = (myDf.seconds %  3600) / 60.0
+
 
         if days > 1:
             return self.posted_date
@@ -48,12 +51,16 @@ class job(models.Model):
                     return f'{hours} hour ago'
                 return f'{hours} hours ago'
             else:
-                if minutes >= 1:
+                
+                if myDf.seconds > 60:
+                    minutes = int(minutes)                    
                     if minutes == 1:
-                        return f'{minutes} minute ago'
-                    return f'{minutes} minutes ago'
+                        return "Just now"
+                    if minutes-1 == 1:
+                        return f'{minutes-1} minute ago'
+                    return f'{minutes-1} minutes ago'
                 else:
-                    if myDf.seconds > 0 and myDf.second < 20:
+                    if myDf.seconds <= 20:
                         return "Just now"
 
                     return f'{myDf.seconds} seconds ago'
@@ -66,12 +73,17 @@ class job(models.Model):
    
 class client(models.Model):
     # additional fields
-    fullName    = models.CharField(max_length = 25)
-    city        = models.CharField(max_length = 25)
-    postcode    = models.CharField(max_length = 25)
-    email       = models.CharField(max_length = 25)
-    homeAddress = models.CharField(max_length = 50)
+    organization_name = models.CharField(max_length = 50, default = None)
     kvkNumber   = models.CharField(max_length = 25)
+    email       = models.CharField(max_length = 25)
+    phone       = models.CharField(max_length = 15, default = None)
+    firstName    = models.CharField(max_length = 25, default = None)
+    lastName    = models.CharField(max_length = 25, default = None)
+    homeAddress = models.CharField(max_length = 50)
+    addressNumber = models.CharField(max_length = 50, default = None)
+    postcode    = models.CharField(max_length = 25)
+    city        = models.CharField(max_length = 25)
+
 
 class freelancer(models.Model):
     firstName   = models.CharField(max_length = 25)
@@ -88,3 +100,4 @@ class freelancer(models.Model):
 class User(AbstractUser):
     ifClient = models.ForeignKey(client, on_delete = models.CASCADE, blank = True, null = True)
     ifFreelancer = models.ForeignKey(freelancer, on_delete = models.CASCADE, blank = True, null = True)
+

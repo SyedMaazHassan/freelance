@@ -23,11 +23,24 @@
                             <small id="deschelp" class="form-text text-muted">Explain your job to the worker</small>
                         </div>
 
-                        <div class="form-group">
-                            <label for="location">Location</label>
-                            <input type="text" class="form-control" name="location" id="location" aria-describedby="locationhelp" required>
-                            <small id="locationhelp" class="form-text text-muted">Complete work location with complete address</small>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" class="form-control" name="location" id="location" aria-describedby="locationhelp" required>
+                                    <small id="locationhelp" class="form-text text-muted">Complete work location with complete address</small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="totalDays">Start date</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                    <small class="text-danger" id="startDateError"></small>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-sm-4">
@@ -72,6 +85,12 @@
                             <p class="text-danger mb-0" id="group_error"></p>
                         </div>
 
+                        <div class="form-group">
+                            <label for="specialNote">Special note to freelancer</label>
+                            <textarea type="text" class="form-control" id="specialNote" name="specialNote" aria-describedby="specialNoteHelp"></textarea>
+                            <small id="specialNoteHelp" class="form-text text-muted">Write here if you have any special requirement</small>
+                        </div>
+
                 
                 </div>
                 <div class="modal-footer">
@@ -85,6 +104,7 @@
 
 
 <script>
+
     var task_types = [
         "verzorging",
         "adl task",
@@ -173,8 +193,14 @@
 
 
     $("#jobForm").on('submit', function(){
-        console.log(selected_groups);
-        console.log(selected_tasks);
+        let input_date = $("#startDate").val();
+
+        if (isCurrentOrFuture(input_date)) {
+            $("#startDateError").text("");
+        }else{
+            $("#startDateError").text("Past date can't be selected!");
+            return false;
+        }
 
         if (selected_tasks.length == 0) {
             $("#task_error").text("Please select at least 1 task type!");
@@ -197,6 +223,30 @@
     
 
     });
+
+    $("#startDate").on('change', function(){
+        let input_date = $("#startDate").val();
+        
+        if (isCurrentOrFuture(input_date)) {
+            $("#startDateError").text("");
+        }else{
+            $("#startDateError").text("Past date can't be selected!");
+        }
+
+    })
+
+    function isCurrentOrFuture(given_date){
+        given_date = given_date.split("-");
+
+        let date_input = new Date();
+        date_input.setHours(0,0,0,0);
+        date_input.setFullYear(parseInt(given_date[0]), parseInt(given_date[1])-1, parseInt(given_date[2]));
+
+        let today = new Date();
+        today.setHours(0,0,0,0);
+
+        return date_input >= today;
+    }
 
 
 </script>

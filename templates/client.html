@@ -15,32 +15,55 @@
 
                         <div class="row">
                             <div class="col-sm-6 my-1">
-                                <input class="field form-control my-2" id="fullName" name="fullName" type="text" value="{{fullName}}" placeholder="Full name" required>
+                                <input class="field form-control my-2" id="organizationName" name="organizationName" type="text" value="{{organizationName}}" placeholder="organization name" required>
+                            </div>
+
+                            <div class="col-sm-6 my-1">
+                                <input class="field form-control my-2" id="kvkNumber" name="kvkNumber" type="text" value="{{kvkNumber}}" placeholder="KVK number" required>
                             </div>
     
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-6 my-1">
                                 <input class="field form-control my-2" id="email" name="email" type="email" value="{{email}}" placeholder="Email" required>
+                            </div>
+
+                            <div class="col-sm-6 my-1">
+                                <input class="field form-control my-2" id="phone" name="phone" type="text" pattern="[0-9]+" value="{{phone}}" placeholder="Phone number" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6 my-1">
-                                <input class="field form-control my-2" id="city" name="city" type="text" value="{{city}}" placeholder="City" required>
+                                <input class="field form-control my-2" id="firstName" name="firstName" type="text" value="{{firstName}}" placeholder="First name" required>
                             </div>
-    
+
+                            <div class="col-sm-6 my-1">
+                                <input class="field form-control my-2" id="lastName" name="lastName" type="text" value="{{lastName}}" placeholder="Last name" required>
+                            </div>
+                        </div>
+
+                        <div class="row">    
                             <div class="col-sm-6 my-1">
                                 <input class="field form-control my-2" id="homeAddress" name="homeAddress" type="text" value="{{homeAddress}}" placeholder="Home Address" required>
                             </div>
+
+                            <div class="col-sm-6 my-1">
+                                <input class="field form-control my-2" id="addressNumber" name="addressNumber" type="text" value="{{addressNumber}}" placeholder="Address number" required>
+                            </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-sm-6 my-1">
                                 <input class="field form-control my-2 my-0" id="postcode" name="postcode" type="text" value="{{postcode}}" placeholder="Postcode" required>
                             </div>
-    
+
                             <div class="col-sm-6 my-1">
-                                <input class="field form-control my-2" id="kvkNumber" name="kvkNumber" type="text" value="{{kvkNumber}}" placeholder="KVK number" required>
+                                <input class="field form-control my-2" id="city" name="city" type="text" value="{{city}}" placeholder="City" required>
                             </div>
+    
                         </div>
 
                         <div class="row">
@@ -91,13 +114,13 @@
                     </div>
     
     
-                    </form>
-
-                    <br>
-           
+                    </form>           
                 </div>
             </div>
         </div>   
+
+        <br>
+
     </div>
   
 </body>
